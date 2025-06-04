@@ -14,7 +14,7 @@ let weatherData = {};
 let tempC, windKph;
 
 // pass the countryCodes to index
-const countriesObject = countryCodes.all("countryCode")
+const countriesObject = countryCodes.all()
 
 app.listen(process.env.PORT, () => {console.log(`App listening on port ${process.env.PORT}`)});
 
@@ -23,10 +23,12 @@ app.get('/weather', (req, res) => {
 });
 
 app.post('/weather', async (req, res) => {
-    const { 'zip-code' : zipCode, country } = req.body
+    let { 'zip-code' : zipCode, country } = req.body
+    if (!country) country = 'United States of America'
     const countryCode = await getCountryCode(country)
     weatherData = await openWeatherReq(zipCode, countryCode)
     convertToMetric()
+    await convertSunlightTime()
     res.redirect('weather/show')
 });
 
@@ -47,17 +49,25 @@ const convertToMetric = () => {
     windKph = parseFloat((windMph * 1.60934).toFixed(2))
 };
 
-// 'United States of America'
+const convertUnixToDate = (unixTime) => {
+    const date = new Date((unixTime * 1000))
+    const time = date.toLocaleTimeString(undefined, { hour12: true })
+    return time
+};
+
+const convertSunlightTime = () => {
+    weatherData.sys.sunrise = convertUnixToDate(weatherData.sys.sunrise)
+    weatherData.sys.sunset = convertUnixToDate(weatherData.sys.sunset)
+};
+
 const getCountryCode = async (country) => {
     const foundCountry = await countriesObject.find(c => c.countryNameEn === country)
-    console.log('Found a country match:', foundCountry)
     return foundCountry.countryCode
-}
-
+};
 
 // TODO-ST Next Steps
 // - CSS to make UI friendlier
 // // - Allow imperial to metric conversion
 // // - Allow country selection during inputs
-// - sunrise & sunset
+// // sunrise & sunset
 // - 5 day forecast (different API)
