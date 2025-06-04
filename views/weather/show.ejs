@@ -3,14 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather</title>
+  <title>Weather Results</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header><h1>Weather Results</h1></header>
-    <p>Location: <%= weatherData.name %></p>
-    <p>Temperature: <%= weatherData.main.temp %></p>
-    <p>Description: <%= weatherData.weather[0].description %></p>
-    <p><a href="/weather">Go Back Home</a></p>
+    <header><h1>Weather</h1></header>
+
+    <div id="unit-toggle">
+    <!-- Checkbox to toggle between Imperial and Metric -->
+      <label for="unitToggle">Use Metric (°C)</label>
+      <input type="checkbox" id="unitToggle" />
+    </div>
+
+    <div id="result-box">
+      <h2 class="result-label">location</h2>
+      <p class="result-data"><%= weatherData.name %></p>
+
+      <h2 class="result-label">temperature</h2>
+      <p class="result-data" id="tempValue"><%= weatherData.main.temp %>°F</p>
+
+      <h2 class="result-label">weather</h2>
+      <% weatherData.weather.forEach((el) => { %>
+        <p class="result-data"><%= el.main %></p>
+      <% }); %>
+
+      <h2 class="result-label">humidity</h2>
+      <p class="result-data"><%= weatherData.main.humidity %>%</p>
+
+      <h2 class="result-label">wind speed</h2>
+      <p class="result-data" id="windValue"><%= weatherData.wind.speed %> mph</p>
+    </div>
+
+    <p id="nav-home">
+      <a href="/weather">Go Back Home</a>
+    </p>
+
+    <script>
+      const unitToggle = document.querySelector('#unitToggle');
+      const tempValue = document.querySelector('#tempValue');
+      const windValue = document.querySelector('#windValue');
+      const tempFString = `<%= weatherData.main.temp %>°F`;
+      const tempCString = `<%= tempC %>°C`;
+      const mphString = `<%= weatherData.wind.speed %> mph`;
+      const kphString = `<%= windKph %> kph`;
+
+      unitToggle.checked = false;
+
+      unitToggle.addEventListener('change', () => {
+        if (unitToggle.checked) {
+          tempValue.textContent = tempCString
+          windValue.textContent = kphString
+        } else {
+          tempValue.textContent = tempFString
+          windValue.textContent = mphString
+        }
+      });
+    </script>
 </body>
 </html>
