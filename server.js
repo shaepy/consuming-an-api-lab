@@ -9,22 +9,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
-// troubleshoot
-app.set('view cache', false);
-
 // global weatherData
 let weatherData = {};
 let tempC, windKph;
 
+// pass the countryCodes to index
+const countriesObject = countryCodes.all("countryCode")
+
 app.listen(process.env.PORT, () => {console.log(`App listening on port ${process.env.PORT}`)});
 
 app.get('/weather', (req, res) => {
-    res.render('index')
+    res.render('index', { countriesObject })
 });
 
 app.post('/weather', async (req, res) => {
-    const { zipCode, countryCode } = req.body
-    // let zipCodeNumber = Number(zipCode)
+    const { 'zip-code' : zipCode, country } = req.body
+    const countryCode = await getCountryCode(country)
     weatherData = await openWeatherReq(zipCode, countryCode)
     convertToMetric()
     res.redirect('weather/show')
@@ -34,8 +34,8 @@ app.get('/weather/show', (req, res) => {
     res.render('weather/show', { weatherData, tempC, windKph })
 });
 
-const openWeatherReq = async (zip, country) => {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${zip},${country}&units=imperial&appid=${process.env.API_KEY}`)
+const openWeatherReq = async (zip, code) => {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${zip},${code}&units=imperial&appid=${process.env.API_KEY}`)
     if (!response.ok) throw new Error('Failed to fetch weather data')
     return await response.json()
 };
@@ -47,8 +47,17 @@ const convertToMetric = () => {
     windKph = parseFloat((windMph * 1.60934).toFixed(2))
 };
 
+// 'United States of America'
+const getCountryCode = async (country) => {
+    const foundCountry = await countriesObject.find(c => c.countryNameEn === country)
+    console.log('Found a country match:', foundCountry)
+    return foundCountry.countryCode
+}
+
+
 // TODO-ST Next Steps
 // - CSS to make UI friendlier
 // // - Allow imperial to metric conversion
-// ! - Allow country selection during inputs
+// // - Allow country selection during inputs
 // - sunrise & sunset
+// - 5 day forecast (different API)

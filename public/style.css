@@ -46,10 +46,10 @@ input[type="submit"] {
     letter-spacing: 0.03rem;
 }
 
-input[type="text"] {
+input[type="text"], input[list="country-list"] {
     font-family: system-ui, sans-serif;
     padding: 5px;
-    width: 100px;
+    width: 150px;
     font-size: 1rem;
     letter-spacing: 0.04rem;
     text-align: center;

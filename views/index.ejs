@@ -10,11 +10,19 @@
     <h1>Weather Checker</h1>
     <form action="/weather" method="POST">
         <div id="weather-form">
-        <label for="zipCode">Enter Zip Code</label>
-        <input type="text" id="zipCode" name="zipCode" required>
-        <label for="zipCode">Enter Country Code</label>
-        <input type="text" id="countryCode" name="countryCode" required>
-        <input type="submit" value="Submit">
+          <label for="zip-code">Enter Zip Code</label>
+          <input type="text" id="zip-code" name="zip-code" required>
+          
+          <label for="country">Enter Country</label>
+          <input list="country-list" id="country" name="country" required />
+
+          <datalist id="country-list">
+            <% countriesObject.forEach((country) => { %>
+              <option value="<%= country.countryNameEn %>"></option>
+            <% }) %>
+          </datalist>
+
+          <input type="submit" value="Submit">
         </div>
     </form>
 </body>
