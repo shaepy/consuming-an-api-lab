@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Results</title>
+  <title>Weather Checker</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header><h1>Weather</h1></header>
+    <header><h1>Weather Checker</h1></header>
 
     <div id="unit-toggle">
     <!-- Checkbox to toggle between Imperial and Metric -->
@@ -17,7 +17,7 @@
 
     <div id="result-box">
       <h2 class="result-label">location</h2>
-      <p class="result-data"><%= weatherData.name %></p>
+      <p class="result-data"><%= weatherData.name %>, <%= weatherData.sys.country %></p>
 
       <h2 class="result-label">temperature</h2>
       <p class="result-data" id="tempValue"><%= weatherData.main.temp %>°F</p>

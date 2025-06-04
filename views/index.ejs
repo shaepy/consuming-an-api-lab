@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather</title>
+  <title>Weather Checker</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>What's the Weather?</h1>
+    <h1>Weather Checker</h1>
     <form action="/weather" method="POST">
         <div id="weather-form">
         <label for="zipCode">Enter Zip Code</label>
         <input type="text" id="zipCode" name="zipCode" required>
+        <label for="zipCode">Enter Country Code</label>
+        <input type="text" id="countryCode" name="countryCode" required>
         <input type="submit" value="Submit">
         </div>
     </form>
