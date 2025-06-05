@@ -1,19 +1,20 @@
-const unitToggle = document.querySelector('#unitToggle');
-const tempValue = document.querySelector('#tempValue');
-const windValue = document.querySelector('#windValue');
-const tempFString = `<%= weatherData.main.temp %>°F`;
-const tempCString = `<%= tempC %>°C`;
-const mphString = `<%= weatherData.wind.speed %> mph`;
-const kphString = `<%= windKph %> kph`;
+const metricToggle = document.querySelector('#unitToggle');
+const windKph = document.querySelector('#windKph');
+const windMph = document.querySelector('#windMph');
+const tempC = document.querySelector('#tempC');
+const tempF = document.querySelector('#tempF');
 
-unitToggle.checked = false;
+const metric = [tempC, windKph];
+const imperial = [tempF, windMph];
 
-unitToggle.addEventListener('change', () => {
-    if (unitToggle.checked) {
-        tempValue.textContent = tempCString
-        windValue.textContent = kphString
+metricToggle.checked = false;
+
+metricToggle.addEventListener('change', () => {
+    if (metricToggle.checked) {
+        metric.forEach(m => m.classList.remove('hidden'));
+        imperial.forEach(i => i.classList.add('hidden'));
     } else {
-        tempValue.textContent = tempFString
-        windValue.textContent = mphString
+        metric.forEach(m => m.classList.add('hidden'));
+        imperial.forEach(i => i.classList.remove('hidden'));
     }
 });

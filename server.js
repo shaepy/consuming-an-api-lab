@@ -11,6 +11,7 @@ app.set('view engine', 'ejs');
 
 // global weatherData
 let weatherData = {};
+let forecastData = {};
 let tempC, windKph;
 
 // pass the countryCodes to index
@@ -29,11 +30,13 @@ app.post('/weather', async (req, res) => {
     weatherData = await openWeatherReq(zipCode, countryCode)
     convertToMetric()
     await convertSunlightTime()
+    // 5 day forecast
+    forecastData = await openForecastReq(weatherData.coord.lon, weatherData.coord.lat)
     res.redirect('weather/show')
 });
 
 app.get('/weather/show', (req, res) => {
-    res.render('weather/show', { weatherData, tempC, windKph })
+    res.render('weather/show', { weatherData, tempC, windKph, forecastData })
 });
 
 const openWeatherReq = async (zip, code) => {
@@ -42,6 +45,12 @@ const openWeatherReq = async (zip, code) => {
     return await response.json()
 };
 
+const openForecastReq = async(lon, lat) => {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${process.env.API_KEY}`)
+    if (!response.ok) throw new Error('Failed to fetch forecast data')
+    return await response.json()
+}
+
 const convertToMetric = () => {
     const tempF = weatherData.main.temp
     tempC = parseFloat(((tempF - 32) * 5/9).toFixed(2))
@@ -49,15 +58,15 @@ const convertToMetric = () => {
     windKph = parseFloat((windMph * 1.60934).toFixed(2))
 };
 
-const convertUnixToDate = (unixTime) => {
+const convertUnixToTime = (unixTime) => {
     const date = new Date((unixTime * 1000))
     const time = date.toLocaleTimeString(undefined, { hour12: true })
     return time
 };
 
 const convertSunlightTime = () => {
-    weatherData.sys.sunrise = convertUnixToDate(weatherData.sys.sunrise)
-    weatherData.sys.sunset = convertUnixToDate(weatherData.sys.sunset)
+    weatherData.sys.sunrise = convertUnixToTime(weatherData.sys.sunrise)
+    weatherData.sys.sunset = convertUnixToTime(weatherData.sys.sunset)
 };
 
 const getCountryCode = async (country) => {
