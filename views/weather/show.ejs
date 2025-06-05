@@ -26,13 +26,13 @@
       <div>
         <h2 class="result-label">weather</h2>
         <% weatherData.weather.forEach((el) => { %>
-        <p class="result-data"><%= el.description %></p>
+          <p class="result-data"><%= el.description %></p>
         <% }); %>
       </div>
       <div>
         <h2 class="result-label">wind speed</h2>
         <p class="result-data imperial"><%= weatherData.wind.speed %> mph</p>
-        <p class="result-data metric hidden"><%= windKph %> kph</p>
+        <p class="result-data metric hidden"><%= weatherData.wind.kph %> kph</p>
       </div>
       <div>
         <h2 class="result-label">humidity</h2>
@@ -41,7 +41,7 @@
       <div>
         <h2 class="result-label">temperature</h2>
         <p class="result-data imperial"><%= weatherData.main.temp %>°F</p>
-        <p class="result-data metric hidden"><%= tempC %>°C</p>
+        <p class="result-data metric hidden"><%= weatherData.main.celsius %>°C</p>
       </div>
       <div>
         <h2 class="result-label">sunrise</h2>
