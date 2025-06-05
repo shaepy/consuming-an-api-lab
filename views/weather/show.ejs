@@ -9,6 +9,9 @@
 </head>
 <body>
     <header><h1>Weather Report</h1></header>
+    <p id="nav-home">
+      <a href="/weather">← Back to Home</a>
+    </p>
 
     <div id="unit-toggle">
       <label for="unitToggle">Use Metric (°C)</label>
@@ -16,45 +19,51 @@
     </div>
 
     <div id="result-box">
-      <h2 class="result-label">location</h2>
-      <p class="result-data"><%= weatherData.name %>, <%= weatherData.sys.country %></p>
-
-      <h2 class="result-label">temperature</h2>
-      <p class="result-data" id="tempF"><%= weatherData.main.temp %>°F</p>
-      <p class="result-data hidden" id="tempC"><%= tempC %>°C</p>
-
-      <h2 class="result-label">weather</h2>
-      <% weatherData.weather.forEach((el) => { %>
-        <p class="result-data"><%= el.main %></p>
-      <% }); %>
-
-      <h2 class="result-label">humidity</h2>
-      <p class="result-data"><%= weatherData.main.humidity %>%</p>
-
-      <h2 class="result-label">wind speed</h2>
-      <p class="result-data" id="windMph"><%= weatherData.wind.speed %> mph</p>
-      <p class="result-data hidden" id="windKph"><%= windKph %> kph</p>
-
-      <h2 class="result-label">sunrise</h2>
-      <p class="result-data"><%= weatherData.sys.sunrise %></p>
-
-      <h2 class="result-label">sunset</h2>
-      <p class="result-data"><%= weatherData.sys.sunset %></p>
+      <div>
+        <h2 class="result-label">location</h2>
+        <p class="result-data"><%= weatherData.name %>, <%= weatherData.sys.country %></p>
+      </div>
+      <div>
+        <h2 class="result-label">weather</h2>
+        <% weatherData.weather.forEach((el) => { %>
+        <p class="result-data"><%= el.description %></p>
+        <% }); %>
+      </div>
+      <div>
+        <h2 class="result-label">wind speed</h2>
+        <p class="result-data" id="windMph"><%= weatherData.wind.speed %> mph</p>
+        <p class="result-data hidden" id="windKph"><%= windKph %> kph</p>
+      </div>
+      <div>
+        <h2 class="result-label">humidity</h2>
+        <p class="result-data"><%= weatherData.main.humidity %>%</p>
+      </div>
+      <div>
+        <h2 class="result-label">temperature</h2>
+        <p class="result-data" id="tempF"><%= weatherData.main.temp %>°F</p>
+        <p class="result-data hidden" id="tempC"><%= tempC %>°C</p>
+      </div>
+      <div>
+        <h2 class="result-label">sunrise</h2>
+        <p class="result-data"><%= weatherData.sys.sunrise %></p>
+      </div>
+      <div>
+        <h2 class="result-label">sunset</h2>
+        <p class="result-data"><%= weatherData.sys.sunset %></p>
+      </div>
     </div>
-
-    <p id="nav-home">
-      <a href="/weather">Go Back Home</a>
-    </p>
 
     <h2>5-Day Forecast</h2>
     <div id="forecast-box">
       <% forecastData.list.forEach((data) => { %>
         <div class="forecast-details">
-          <p>Day: <%= data.dt %></p>
-          <p>Temp: <%= data.main.temp %>°F</p>
-          <p>Weather: <%= data.weather[0].main %></p>
-          <p>Humidity: <%= data.main.humidity %>%</p>
-          <p>Wind: <%= data.wind.speed %> mph</p>
+          <p class="forecast-date"><%= data.dt %></p>
+          <p class="forecast-unit"><%= data.main.temp %>°F</p>
+          <p class="forecast-unit"><%= data.main.celsius %>°C</p>
+          <p class="forecast-unit"><%= data.weather[0].description %></p>
+          <p class="forecast-unit"><%= data.main.humidity %>% humid</p>
+          <p class="forecast-unit"><%= data.wind.speed %> mph wind</p>
+          <p class="forecast-unit"><%= data.wind.kph %> kph wind</p>
         </div>
       <% }) %>
     </div>

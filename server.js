@@ -28,10 +28,10 @@ app.post('/weather', async (req, res) => {
     if (!country) country = 'United States of America'
     const countryCode = await getCountryCode(country)
     weatherData = await openWeatherReq(zipCode, countryCode)
-    convertToMetric()
-    await convertSunlightTime()
-    // 5 day forecast
     forecastData = await openForecastReq(weatherData.coord.lon, weatherData.coord.lat)
+    convertForecastDates()
+    convertToMetric()
+    convertSunlightTimes()
     res.redirect('weather/show')
 });
 
@@ -56,17 +56,40 @@ const convertToMetric = () => {
     tempC = parseFloat(((tempF - 32) * 5/9).toFixed(2))
     const windMph = weatherData.wind.speed
     windKph = parseFloat((windMph * 1.60934).toFixed(2))
+
+    forecastData.list.forEach(d => {
+        const fcTempC = parseFloat(((d.main.temp - 32) * 5/9).toFixed(2))
+        d.main.celsius = fcTempC
+        const fcWindKph = parseFloat((d.wind.speed * 1.60934).toFixed(2))
+        d.wind.kph = fcWindKph
+    })
 };
 
-const convertUnixToTime = (unixTime) => {
-    const date = new Date((unixTime * 1000))
-    const time = date.toLocaleTimeString(undefined, { hour12: true })
-    return time
+const convertSunlightTimes = () => {
+    const unixToTime = (unixTime) => {
+        const date = new Date((unixTime * 1000))
+        const time = date.toLocaleTimeString(undefined, { hour12: true })
+        return time
+    };
+    weatherData.sys.sunrise = unixToTime(weatherData.sys.sunrise)
+    weatherData.sys.sunset = unixToTime(weatherData.sys.sunset)
 };
 
-const convertSunlightTime = () => {
-    weatherData.sys.sunrise = convertUnixToTime(weatherData.sys.sunrise)
-    weatherData.sys.sunset = convertUnixToTime(weatherData.sys.sunset)
+const convertForecastDates = () => {
+    const unixToDate = (unixTime) => {
+        let date = new Date((unixTime * 1000))
+        date = date.toLocaleString(undefined, { 
+            hour12: true,
+            month: 'numeric',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+        });
+        date = date.replace(',','')
+        return date
+    };
+    forecastData.list.forEach(unixDt => {unixDt.dt = unixToDate(unixDt.dt)});
 };
 
 const getCountryCode = async (country) => {
@@ -79,4 +102,4 @@ const getCountryCode = async (country) => {
 // // - Allow imperial to metric conversion
 // // - Allow country selection during inputs
 // // sunrise & sunset
-// - 5 day forecast (different API)
+// FIX 5-day forecast should also take in metric conversions
