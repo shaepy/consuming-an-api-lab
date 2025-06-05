@@ -31,8 +31,8 @@
       </div>
       <div>
         <h2 class="result-label">wind speed</h2>
-        <p class="result-data" id="windMph"><%= weatherData.wind.speed %> mph</p>
-        <p class="result-data hidden" id="windKph"><%= windKph %> kph</p>
+        <p class="result-data imperial"><%= weatherData.wind.speed %> mph</p>
+        <p class="result-data metric hidden"><%= windKph %> kph</p>
       </div>
       <div>
         <h2 class="result-label">humidity</h2>
@@ -40,8 +40,8 @@
       </div>
       <div>
         <h2 class="result-label">temperature</h2>
-        <p class="result-data" id="tempF"><%= weatherData.main.temp %>°F</p>
-        <p class="result-data hidden" id="tempC"><%= tempC %>°C</p>
+        <p class="result-data imperial"><%= weatherData.main.temp %>°F</p>
+        <p class="result-data metric hidden"><%= tempC %>°C</p>
       </div>
       <div>
         <h2 class="result-label">sunrise</h2>
@@ -58,12 +58,12 @@
       <% forecastData.list.forEach((data) => { %>
         <div class="forecast-details">
           <p class="forecast-date"><%= data.dt %></p>
-          <p class="forecast-unit"><%= data.main.temp %>°F</p>
-          <p class="forecast-unit"><%= data.main.celsius %>°C</p>
+          <p class="forecast-unit imperial"><%= data.main.temp %>°F</p>
+          <p class="forecast-unit metric hidden"><%= data.main.celsius %>°C</p>
           <p class="forecast-unit"><%= data.weather[0].description %></p>
           <p class="forecast-unit"><%= data.main.humidity %>% humid</p>
-          <p class="forecast-unit"><%= data.wind.speed %> mph wind</p>
-          <p class="forecast-unit"><%= data.wind.kph %> kph wind</p>
+          <p class="forecast-unit imperial"><%= data.wind.speed %> mph wind</p>
+          <p class="forecast-unit metric hidden"><%= data.wind.kph %> kph wind</p>
         </div>
       <% }) %>
     </div>
